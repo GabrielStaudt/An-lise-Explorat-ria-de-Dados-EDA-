@@ -1,2 +1,27 @@
-# An-lise-Explorat-ria-de-Dados-EDA-
-Realizar uma análise exploratória completa de um conjunto de dados, aplicando técni cas de preparação, visualização e interpretação, com o objetivo de extrair informações relevantes que apoiem a tomada de decisão.
+## Definição do problema ##
+• Contextualizar o dataset;
+• Formular a pergunta orientadora;
+• Justificar a relevância.
+## Compreensão dos dados ##
+• Identificar variáveis e tipos;
+• Informar dimensões;
+• Identificar limitações.
+## Limpeza e preparação ##
+• tratamento de valores ausentes;
+• correção de inconsistências;
+• tratamento de outliers;
+• transformações quando necessário.
+ ## Análise Exploratória ##
+• distribuições;
+• relações entre variáveis;
+• correlações;
+• padrões e tendências;
+• visualizações adequadas.
+## Interpretação ##
+• principais insights;
+• relação com a pergunta inicial;
+• limitações.
+## Conclusões ##
+• resposta clara à pergunta;
+• possíveis aplicações;
+• sugestões futuras
