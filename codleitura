@@ -1,0 +1,113 @@
+import pandas as pd
+
+def executar_ingestao(caminho_ficheiro):
+    print("--- PROCESSO 1: INGESTÃO E COMPREENSÃO ---")
+    
+    # 1. Carregar o dataset
+    df = pd.read_csv(caminho_ficheiro)
+    
+    # 2. Informações e dimensões
+    print(f"Dimensões do dataset: {df.shape[0]} linhas e {df.shape[1]} colunas.")
+    print("\nInformações das variáveis:")
+    df.info()
+    
+    # 3. Estatísticas descritivas iniciais
+    print("\nEstatísticas descritivas (dados brutos):")
+    print(df.describe())
+    
+    return df
+
+if __name__ == "__main__":
+    df_bruto = executar_ingestao('PimaIndiansDiabetes.csv')
+import pandas as pd
+import numpy as np
+
+def executar_limpeza(df):
+    print("\n--- PROCESSO 2: LIMPEZA E PREPARAÇÃO ---")
+    
+    df_limpo = df.copy()
+    
+    # 1. Tratamento de valores impossíveis (zero em medições biológicas)
+    cols_com_zeros = ['glucose', 'pressure', 'triceps', 'insulin', 'mass']
+    df_limpo[cols_com_zeros] = df_limpo[cols_com_zeros].replace(0, np.nan)
+    
+    # 2. Transformação da variável categórica em numérica para correlação
+    df_limpo['diabetes_num'] = df_limpo['diabetes'].map({'pos': 1, 'neg': 0})
+    
+    print("Contagem de valores nulos após o tratamento:")
+    print(df_limpo.isnull().sum())
+    
+    return df_limpo
+
+if __name__ == "__main__":
+    # Assumindo que df_bruto vem do Processo 1
+    # df_limpo = executar_limpeza(df_bruto)
+    pass
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def executar_analise_exploratoria(df_limpo):
+    print("\n--- PROCESSO 3: ANÁLISE EXPLORATÓRIA ---")
+    sns.set_theme(style="whitegrid")
+    
+    # 1. Análise de Correlação
+    plt.figure(figsize=(10, 8))
+    corr = df_limpo.drop('diabetes', axis=1).corr()
+    sns.heatmap(corr, annot=True, cmap='coolwarm', fmt=".2f")
+    plt.title('Mapa de Correlação de Variáveis')
+    plt.savefig('heatmap_correlacao.png')
+    plt.close()
+    print("- Mapa de correlação gerado ('heatmap_correlacao.png').")
+
+    # 2. Distribuição de Glicose e IMC (Boxplots)
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+    
+    sns.boxplot(ax=axes[0], x='diabetes', y='glucose', data=df_limpo, palette='Set2')
+    axes[0].set_title('Distribuição de Glicose por Diagnóstico')
+    
+    sns.boxplot(ax=axes[1], x='diabetes', y='mass', data=df_limpo, palette='Set2')
+    axes[1].set_title('Distribuição de IMC por Diagnóstico')
+    
+    plt.savefig('boxplots_glicose_imc.png')
+    plt.close()
+    print("- Boxplots gerados ('boxplots_glicose_imc.png').")
+
+    # 3. Relação Multivariável (Glicose vs IMC)
+    plt.figure(figsize=(8, 6))
+    sns.scatterplot(x='glucose', y='mass', hue='diabetes', data=df_limpo, palette='Set1', alpha=0.7)
+    plt.title('Relação entre Glicose e IMC por Diagnóstico')
+    plt.savefig('scatter_glicose_imc.png')
+    plt.close()
+    print("- Gráfico de dispersão gerado ('scatter_glicose_imc.png').")
+
+if __name__ == "__main__":
+    # df_limpo = executar_limpeza(df_bruto)
+    # executar_analise_exploratoria(df_limpo)
+    pass
+
+# Importação dos módulos criados acima
+# from 01_ingestao import executar_ingestao
+# from 02_pre_processamento import executar_limpeza
+# from 03_analise_exploratoria import executar_analise_exploratoria
+
+def main():
+    caminho_dados = 'PimaIndiansDiabetes.csv'
+    
+    # Processo 1
+    df_bruto = executar_ingestao(caminho_dados)
+    
+    # Processo 2
+    df_limpo = executar_limpeza(df_bruto)
+    
+    # Processo 3
+    executar_analise_exploratoria(df_limpo)
+    
+    # Processo 4: Interpretação (Output em texto)
+    print("\n--- PROCESSO 4: INTERPRETAÇÃO E CONCLUSÕES ---")
+    print("Os resultados visuais e matemáticos foram gerados.")
+    print("Conclusão Principal: A glicose é o fator mais determinante, sendo ")
+    print("potencializada por altos valores de IMC. O pipeline de dados foi concluído com sucesso!")
+
+if __name__ == "__main__":
+    main()
